@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> My landing page </title>
+        <!--<link rel="stylesheet" href="styles.css">-->
+        <style>
+            body, html {
+                height: 100%
+            }
+
+            .back {
+                background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
+                height: 100%;
+                background-position: center;
+                background-size: cover;
+                position: relative;
+                color: white;
+                font-family: "Courier New", Courier, monospace;
+                font-size: 25px;
+            }
+
+            /* Position text in the middle */
+            .middle {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+            }
+
+            /* Style the <hr> element */
+            hr {
+                margin: auto;
+                width: 40%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="back">
+            <div class="middle">
+                <h1>{{welcome}}</h1>
+                <hr>
+                <p>{{name}}</p>
+            </div>
+            <div></div>
+            <form action="{{ url_for('search') }}" method="post">
+                From: <input type="text" name="source" value="From"><br>
+                To: <input type="text" name="destination" value="To"><br>
+                Date: <input type="text" name="date_from" value="MM-DD-YYYY"><br>
+                Passenger: <input type="int" name="passengers" value=2><br>
+
+                <input type="submit" value="Submit">
+            </form>
+
+
+        </div>
+    </body>
+</html>

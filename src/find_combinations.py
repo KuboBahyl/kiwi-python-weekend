@@ -1,5 +1,10 @@
 from pprint import pprint
-from utils import *
+from time import time
+
+from data_utils import stdin_flights, preprocess
+from tree_manipulation import make_tree, search_combinations
+from validation import filter_cycles, filter_duplicates, add_prices
+
 
 if __name__ == '__main__':
     '''
@@ -25,6 +30,8 @@ if __name__ == '__main__':
         - if interested in searching combinations from certain airport, it can be
         easily specified before tree searching
     '''
+    time_start = time()
+
     flights = stdin_flights()
     flights = preprocess(flights)
 
@@ -35,5 +42,8 @@ if __name__ == '__main__':
         combinations = filter_cycles(combinations, flights)
         combinations = filter_duplicates(combinations)
         combinations = add_prices(combinations, flights, num_bags=bags)
-        print("\n Flights combinations and prices for number of bags: {}".format(bags))
-        pprint(combinations)
+        # print("\n Flights combinations and prices for number of bags: {}".format(bags))
+        # pprint(combinations)
+
+
+    print('Time elapsed: {} ms'.format(round(1000*(time() - time_start), 2)))
