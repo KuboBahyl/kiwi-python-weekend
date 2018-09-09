@@ -13,7 +13,7 @@ def home_page():
 
 @app.route('/ping')
 def ping():
-    return render_template('index.html', welcome='Pong', name=':-)', search_url='/search')
+    return render_template('index.html', welcome='Pong', name=':-)')
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -26,7 +26,11 @@ def search():
     print(user_dep, user_dest, user_time_dep, user_passengers)
 
     results = search_results(user_dep, user_dest, user_time_dep, user_passengers)
-    results = jsonify(results)
+    colNames = list(results[0].keys())
+    print(colNames)
+
+    return render_template('results.html', results=results, colnames=colNames)
+    # return jsonify(results)
 
 
 

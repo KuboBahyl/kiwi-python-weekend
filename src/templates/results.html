@@ -3,61 +3,78 @@
     <head>
         <meta charset="UTF-8">
         <title> My landing page </title>
-        <!--<link rel="stylesheet" href="styles.css">-->
+        <link rel="stylesheet" href="styles.css">
         <style>
-            body, html {
-                height: 100%
-            }
-
             .back {
                 background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
                 height: 100%;
                 background-position: center;
                 background-size: cover;
-                position: relative;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
                 color: white;
                 font-family: "Courier New", Courier, monospace;
                 font-size: 25px;
             }
 
-            /* Position text in the middle */
-            .middle {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                text-align: center;
-            }
-
-            /* Style the <hr> element */
             hr {
                 margin: auto;
                 width: 40%;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px;
+            }
+
+            /*tr:nth-child(even){background-color: #f2f2f2}*/
+
+            th {
+                background-color: red;
+                color: white;
             }
         </style>
     </head>
 
     <body>
         <div class="back">
-            <div class="middle">
-                <h1>{{welcome}}</h1>
-                <hr>
-                <p>{{name}}</p>
-            </div>
-            <div></div>
-            <form action="{{ url_for('search') }}" method="post">
-                From: <input type="text" name="source" value="From"><br>
-                To: <input type="text" name="destination" value="To"><br>
-                Date: <input type="text" name="date_from" value="MM-DD-YYYY"><br>
-                Passenger: <input type="int" name="passengers" value=2><br>
+            <!--<div class="middle">-->
+                <!--<h1>{{welcome}}</h1>-->
+                <!--<hr>-->
+                <!--<p>{{name}}</p>-->
+            <!--</div>-->
+            <!--<form action="{{ url_for('search') }}" method="post">-->
+                <!--From: <input type="text" name="source" value="From"><br>-->
+                <!--To: <input type="text" name="destination" value="To"><br>-->
+                <!--Date: <input type="text" name="date_from" value="MM-DD-YYYY"><br>-->
+                <!--Passenger: <input type="int" name="passengers" value=2><br>-->
 
-                <input type="submit" value="Submit">
-            </form>
+                <!--<input type="submit" value="Submit">-->
+            <!--</form>-->
 
-            <script>
-                var results = ${{results}}
+            <table border="1">
+                <thead>
+                    <tr>
+                        {% for col in colnames %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        {% for col in colnames %}
+                        <td>{{ result[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-            </script>
 
 
         </div>
