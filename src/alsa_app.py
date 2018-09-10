@@ -25,7 +25,7 @@ def search():
     user_passengers = request.form.get('passengers', 1)
     print(user_dep, user_dest, user_time_dep, user_passengers)
 
-    results = search_results(user_dep, user_dest, user_time_dep, user_passengers)
+    results = search_results(user_dep, user_dest, user_time_dep, user_passengers, postgres=True)
     colNames = list(results[0].keys())
     print(colNames)
 

@@ -5,3 +5,10 @@ redis_config = {
     'host': '35.198.72.72',
     'port': 3389
 }
+
+pg_config = {
+    'host': '35.234.120.106',
+    'database': 'pythonweekend',
+    'user': 'shareduser',
+    'password': 'NeverEverSharePasswordsInProductionEnvironement'
+}

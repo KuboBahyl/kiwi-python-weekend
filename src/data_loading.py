@@ -1,10 +1,11 @@
 from urllib.parse import parse_qs, urlparse, urlencode
-from redis import StrictRedis
 from boltons import strutils
 from requests_html import HTMLSession
 import json
+import datetime
 
 from src import url_locations, url_template
+from postgres_utils import insert_to_pg
 
 
 def slugify(text: str):
@@ -72,23 +73,64 @@ def scrap_asus(session, user_dep, user_dep_id, user_dest, user_dest_id, user_tim
         return {'message': "Error message occured in results. Check inputs!"}
 
 
-def load_data(session: HTMLSession, redis_db: StrictRedis,
-              user_dep: str, user_dest: str, user_time_dep: str, user_passengers: int) -> list:
+def load_data(user_dep: str, user_dest: str, user_time_dep: str, user_passengers: int,
+              redis_db = None, pg_conn = None) -> list:
 
-    try:
-        user_dep_id = redis_db.get('city_id_' + slugify(user_dep)).decode('utf-8')
-        user_dest_id = redis_db.get('city_id_' + slugify(user_dest)).decode('utf-8')
+    session = HTMLSession()
 
-    except:
+    if redis_db:
+        try:
+            user_dep_id = redis_db.get('city_id_' + slugify(user_dep)).decode('utf-8')
+            user_dest_id = redis_db.get('city_id_' + slugify(user_dest)).decode('utf-8')
+
+        except:
+            locations_json = get_locations(session)
+            user_dep_id = get_id(user_dep, locations_json)
+            user_dest_id = get_id(user_dest, locations_json)
+            redis_db.set('city_id_' + slugify(user_dep), user_dep_id)
+            redis_db.set('city_id_' + slugify(user_dest), user_dest_id)
+
+        journey_redis_name = '_'.join(['journey', str(user_dep_id), str(user_dest_id), user_time_dep])
+
+        # return redis_db.get(journey_redis_name).decode('utf-8')
+        results_json = scrap_asus(session, user_dep, user_dep_id, user_dest, user_dest_id,
+                                  user_time_dep, user_passengers)
+        redis_db.set(journey_redis_name, results_json)
+        return results_json
+
+    elif pg_conn:
+
+        # TODO try to load data from pg
+
         locations_json = get_locations(session)
         user_dep_id = get_id(user_dep, locations_json)
         user_dest_id = get_id(user_dest, locations_json)
-        redis_db.set('city_id_' + slugify(user_dep), user_dep_id)
-        redis_db.set('city_id_' + slugify(user_dest), user_dest_id)
+        results_json = scrap_asus(session, user_dep, user_dep_id, user_dest, user_dest_id,
+                                  user_time_dep, user_passengers)
 
-    journey_redis_name = '_'.join(['journey', str(user_dep_id), str(user_dest_id), user_time_dep])
+        for result_dict in results_json:
 
-    # return redis_db.get(journey_redis_name).decode('utf-8')
-    results_json = scrap_asus(session, user_dep, user_dep_id, user_dest, user_dest_id, user_time_dep, user_passengers)
-    redis_db.set(journey_redis_name, results_json)
-    return results_json
+
+
+
+        d = datetime.datetime.now()
+        values_test = {'src_id': 91342,
+                  'dst_id': 91302,
+                  'dep': datetime.datetime(2012, 5, 1),
+                  'arr': datetime.datetime(2012, 5, 1),
+                  'price': 133.7,
+                  'type': 'test'}
+
+        insert_to_pg(pg_conn, values_test)
+
+
+        # sql_select = "SELECT * FROM connections WHERE price < 100"
+        #
+        # with pg_conn.cursor(cursor_factory=RealDictCursor) as cursor:
+        #     cursor.execute(sql_select)
+        #     results_dict = cursor.fetchall()
+        #     return results_dict
+
+
+
+
