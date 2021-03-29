@@ -24,7 +24,7 @@ pickleshare==0.7.4
 prompt-toolkit==1.0.15
 ptyprocess==0.6.0
 pyee==5.0.0
-Pygments==2.2.0
+Pygments==2.7.4
 pyppeteer==0.0.21
 pyquery==1.4.0
 pyspark==2.3.1
