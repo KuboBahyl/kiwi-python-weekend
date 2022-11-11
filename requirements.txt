@@ -27,7 +27,7 @@ pyee==5.0.0
 Pygments==2.2.0
 pyppeteer==0.0.21
 pyquery==1.4.0
-pyspark==2.3.1
+pyspark==3.2.2
 python-dateutil==2.7.3
 pytz==2018.5
 redis==2.10.6
